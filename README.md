@@ -35,7 +35,7 @@ The normalized hidden state is passed through the LM head (same weights as embed
 
 # 🧩 Key Architectural Features
 
-## 🔵 1. Grouped Query Attention (GQA)
+##  1. Grouped Query Attention (GQA)
 
 Instead of giving each attention head its own Key/Value projections:
 
@@ -49,29 +49,10 @@ Instead of giving each attention head its own Key/Value projections:
 
 ---
 
-## 🟣 2. SwiGLU MLP
-
-Replaces the older **GeLU FFN**.
-
-It uses **three projections**:
-
-- Gate
-- Up
-- Down
-
-### Formula:
-\[
-F(x) = (Swish(xW_g) \otimes xW_u)W_d
-\]
-
-### Why SwiGLU?
-- Better performance per parameter  
-- Smoother gradients  
-- Now almost standard in modern LLMs  
 
 ---
 
-## 🟢 3. RMSNorm
+## 2. RMSNorm
 
 Used instead of LayerNorm.
 
