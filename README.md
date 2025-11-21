@@ -1,18 +1,12 @@
-# 🦙 SmolLM2-135M: Reverse Engineered Implementation
+#  SmolLM2-135M: Implementation
 
 A **from-scratch PyTorch implementation** of the **SmolLM2-135M** language model.  
-This project reverse-engineers the architecture from **GGUF metadata**, recreates it using modern components (Flash Attention, AMP), and includes an experiment demonstrating how removing optimizer states affects training stability.
+recreates Model using modern components (Flash Attention, AMP), and includes an experiment demonstrating how removing optimizer states affects training stability.
 
 ---
 
-# 🧠 1. Model Architecture
+#  1. Model Architecture
 
-SmolLM2 follows the **modern LLaMA-style architecture**, not GPT-2.  
-Below is the structural breakdown in both diagram form and detailed explanation.
-
----
-
-##  Architecture
 
 ```mermaid
 graph TD
@@ -108,32 +102,15 @@ Used instead of LayerNorm.
 
 We parsed the GGUF tensor metadata and counted every single tensor element.
 
-| Component      | Tensor Shape          | Parameters     | % of Model | Details |
-|----------------|------------------------|---------------:|-----------:|---------|
-| **Embeddings** | `[49152, 576]`         | 28,311,552     | 21.05%     | Vocabulary × Hidden Dim |
-| **Attention**  | Q, K, V, O             | 26,542,080     | 19.73%     | 9 Q Heads + 3 KV Heads × 30 layers |
-| **MLP (SwiGLU)** | Gate, Up, Down       | 79,626,240     | 59.20%     | The "brain" of the model |
-| **Normalization** | `[576]`             | 35,136         | 0.03%      | RMSNorm per block |
-| **TOTAL**      | —                      | **134,515,008** | **100%** | ~135M |
+| Component      | Parameters     | % of Model | Details |
+|----------------|---------------:|-----------:|---------|
+| **Embeddings** | 28,311,552     | 21.05%     | Vocabulary × Hidden Dim |
+| **Attention**  | 26,542,080     | 19.73%     | 9 Q Heads + 3 KV Heads × 30 layers |
+| **MLP (SwiGLU)** | 79,626,240     | 59.20%     | The "brain" of the model |
+| **Normalization** | 35,136         | 0.03%      | RMSNorm per block |
+| **TOTAL**       | **134,515,008** | **100%** | ~135M |
 
 ---
 
-# 🏁 Summary
 
-This README provides:
-
-✔ A clean breakdown of SmolLM2-135M architecture  
-✔ Mermaid diagram of computation flow  
-✔ Full explanation of GQA, SwiGLU, RMSNorm  
-✔ Exact parameter distribution (reverse-engineered)  
-
----
-
-If you'd like, I can also generate:
-
-📦 A downloadable PyTorch implementation  
-📈 Architecture diagrams as PNG  
-🧪 Training scripts + stability experiment  
-📘 HuggingFace model card style README  
-
-Just ask!
+This is the Model Architecture reference link (https://ollama.com/library/smollm2:135m/blobs/f535f83ec568)
