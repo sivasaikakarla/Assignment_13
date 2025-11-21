@@ -8,21 +8,20 @@ recreates Model using modern components (Flash Attention, AMP), and includes an 
 #  1. Model Architecture
 
 
-```mermaid
 graph TD
-    subgraph "Global Structure"
-        Input[Input IDs] --> Embed[Embedding Layer (Wt)]
+    subgraph GlobalStructure
+        Input[Input IDs] --> Embed[Embedding Layer Wt]
         Embed --> Block0[Llama Block 0]
         Block0 --> Block1[...]
         Block1 --> Block29[Llama Block 29]
         Block29 --> RMS_F[RMSNorm Final]
-        RMS_F --> Head[LM Head (Wt)]
+        RMS_F --> Head[LM Head Wt]
         Head --> Output[Logits]
     end
 
-    subgraph "Inside a Block (x30)"
+    subgraph InsideBlock
         direction TB
-        x[Input x] --> N1[RMSNorm]
+        x[Input Hidden State] --> N1[RMSNorm]
         N1 --> GQA[Grouped Query Attention]
         GQA --> Add1((+))
         x --> Add1
@@ -33,11 +32,6 @@ graph TD
         Add1 --> Add2
     end
 
-    style Embed fill:#f9f,stroke:#333,stroke-width:2px
-    style Head fill:#f9f,stroke:#333,stroke-width:2px
-    style GQA fill:#bbf,stroke:#333
-    style MLP fill:#bbf,stroke:#333
-```
 
 ### 🔗 **Note:**  
 **Embedding Layer** and **LM Head** share weights (`Wt`), saving ~28M parameters.
