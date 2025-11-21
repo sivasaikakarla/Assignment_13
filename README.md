@@ -7,30 +7,25 @@ recreates Model using modern components (Flash Attention, AMP), and includes an 
 
 #  1. Model Architecture
 
+Embedding → 30 Transformer Blocks → Final RMSNorm → LM Head → Logits
 
-graph TD
-    subgraph GlobalStructure
-        Input[Input IDs] --> Embed[Embedding Layer Wt]
-        Embed --> Block0[Llama Block 0]
-        Block0 --> Block1[...]
-        Block1 --> Block29[Llama Block 29]
-        Block29 --> RMS_F[RMSNorm Final]
-        RMS_F --> Head[LM Head Wt]
-        Head --> Output[Logits]
-    end
+Token Embedding (Weight-Tied):
+Input token IDs are mapped to dense vectors using an embedding matrix that is later shared with the LM head.
 
-    subgraph InsideBlock
-        direction TB
-        x[Input Hidden State] --> N1[RMSNorm]
-        N1 --> GQA[Grouped Query Attention]
-        GQA --> Add1((+))
-        x --> Add1
+30× Transformer Blocks:
+The embedded sequence is passed through 30 identical Llama-style decoder blocks.
 
-        Add1 --> N2[RMSNorm]
-        N2 --> MLP[SwiGLU FeedForward]
-        MLP --> Add2((+))
-        Add1 --> Add2
-    end
+RMSNorm → Grouped Query Attention:
+Each block first applies RMSNorm, then performs GQA attention (many Query heads, fewer shared KV heads), followed by a residual connection.
+
+RMSNorm → SwiGLU FeedForward:
+A second RMSNorm is applied, followed by a SwiGLU MLP (Gate, Up, Down projections), plus another residual connection.
+
+Final RMSNorm:
+After all 30 blocks, a final RMSNorm stabilizes the output representation.
+
+LM Head (Weight-Tied) → Logits:
+The normalized hidden state is passed through the LM head (same weights as embeddings) to produce vocabulary logits.
 
 
 ### 🔗 **Note:**  
